@@ -18,6 +18,12 @@ A new flutter plugin project.
   s.dependency 'Flutter'
   s.platform = :ios, '8.0'
 
+  # v1.8.7.1
+  s.static_framework = true
+  s.subspec 'vendor' do |sp|
+    sp.dependency 'DouyinOpenSDK', '~> 4.0.0'
+  end
+
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
 end
