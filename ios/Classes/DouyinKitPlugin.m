@@ -1,5 +1,6 @@
 #import "DouyinKitPlugin.h"
 #import <DouyinOpenSDK/DouyinOpenSDKApplicationDelegate.h>
+#import <DouyinOpenSDK/DouyinOpenSDKAuth.h>
 
 @implementation DouyinKitPlugin {
     FlutterMethodChannel *_channel;
@@ -25,11 +26,45 @@
 - (void)handleMethodCall:(FlutterMethodCall *)call
                   result:(FlutterResult)result {
     if ([@"registerApp" isEqualToString:call.method]) {
-        NSString *appId = call.arguments[@"appId"];
+        NSString *clientKey = call.arguments[@"client_key"];
+        [[DouyinOpenSDKApplicationDelegate sharedInstance] registerAppId:clientKey];
         result(nil);
+    } else if ([@"isInstalled" isEqualToString:call.method]) {
+        result([NSNumber numberWithBool:[[DouyinOpenSDKApplicationDelegate sharedInstance] isAppInstalled]]);
+    } else if ([@"isSupportAuth" isEqualToString:call.method]) {
+        result([NSNumber numberWithBool:YES]);
+    } else if ([@"auth" isEqualToString:call.method]) {
+        [self handleAuthCall:call result:result];
+    } else if ([@"isSupportShare" isEqualToString:call.method]) {
+        
+    } else if ([@[@"shareImage", @"shareVideo", @"shareMicroApp", @"shareHashTags", @"shareAnchor"] containsObject:call.method]) {
+        [self handleShareCall:call result:result];
+    } else if ([@"isSupportShareToContacts" isEqualToString:call.method]) {
+        
+    } else if ([@[@"shareImageToContacts", @"shareHtmlToContacts"] containsObject:call.method]) {
+        [self handleShareToContactsCall:call result:result];
+    } else if ([@"isSupportOpenRecord" isEqualToString:call.method]) {
+        
+    } else if ([@"openRecord" isEqualToString:call.method]) {
+        [self handleOpenRecordCall:call result:result];
     } else {
         result(FlutterMethodNotImplemented);
     }
+}
+
+- (void)handleAuthCall:(FlutterMethodCall *)call result:(FlutterResult)result {
+}
+
+- (void)handleShareCall:(FlutterMethodCall *)call
+                      result:(FlutterResult)result {
+}
+
+- (void)handleShareToContactsCall:(FlutterMethodCall *)call
+                      result:(FlutterResult)result {
+}
+
+- (void)handleOpenRecordCall:(FlutterMethodCall *)call
+                      result:(FlutterResult)result {
 }
 
 #pragma mark - AppDelegate

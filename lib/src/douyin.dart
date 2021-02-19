@@ -136,7 +136,7 @@ class Douyin {
     String state,
   }) {
     assert(imageUris?.isNotEmpty ?? false);
-    assert(imageUris.length <= 12 /*抖音12.3.0时为35*/);
+    assert(imageUris.length <= 12 /*Android 抖音12.3.0时为35*/);
     assert(imageUris.every((Uri element) => element != null && element.isScheme('file')));
     return _channel.invokeMethod<void>(
       'shareImage',
@@ -225,15 +225,14 @@ class Douyin {
 
   ///
   Future<void> shareImageToContacts({
-    @required List<Uri> imageUris,
+    @required Uri imageUri,
     String state,
   }) {
-    assert(imageUris?.length == 1);
-    assert(imageUris.every((Uri element) => element != null && element.isScheme('file')));
+    assert(imageUri != null && imageUri.isScheme('file'));
     return _channel.invokeMethod<void>(
       'shareImageToContacts',
       <String, dynamic>{
-        'image_uris': imageUris.map((Uri element) => element.toString()).toList(),
+        'image_uris': <Uri>[imageUri].map((Uri element) => element.toString()).toList(),
         if (state != null) 'state': state,
       },
     );
@@ -248,7 +247,9 @@ class Douyin {
     String state,
   }) {
     assert(title?.isNotEmpty ?? false);
+    assert(thumbUrl == null || (thumbUrl.isScheme('http') || thumbUrl.isScheme('https')));
     assert(url != null && (url.isScheme('http') || url.isScheme('https')));
+    assert(discription?.isNotEmpty ?? false);
     return _channel.invokeMethod<void>(
       'shareToContacts',
       <String, dynamic>{

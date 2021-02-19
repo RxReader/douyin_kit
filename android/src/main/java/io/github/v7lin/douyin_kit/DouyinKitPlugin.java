@@ -191,17 +191,17 @@ public final class DouyinKitPlugin implements FlutterPlugin, ActivityAware, Meth
             DouYinOpenApi openApi = createOpenApi();
             result.success(openApi != null && openApi.isAppSupportShare());
         } else if (Arrays.asList("shareImage", "shareVideo", "shareMicroApp", "shareHashTags", "shareAnchor").contains(call.method)) {
-            handleShare(call, result);
+            handleShareCall(call, result);
         } else if ("isSupportShareToContacts".equals(call.method)) {
             DouYinOpenApi openApi = createOpenApi();
             result.success(openApi != null && openApi.isAppSupportShareToContacts());
         } else if (Arrays.asList("shareImageToContacts", "shareHtmlToContacts").contains(call.method)) {
-            handleShareToContacts(call, result);
+            handleShareToContactsCall(call, result);
         } else if ("isSupportOpenRecord".equals(call.method)) {
             DouYinOpenApi openApi = createOpenApi();
             result.success(openApi != null && openApi.isSupportOpenRecordPage());
         } else if ("openRecord".equals(call.method)) {
-            handleOpenRecordPage(call, result);
+            handleOpenRecordCall(call, result);
         } else {
             result.notImplemented();
         }
@@ -224,7 +224,7 @@ public final class DouyinKitPlugin implements FlutterPlugin, ActivityAware, Meth
         result.success(null);
     }
 
-    private void handleShare(MethodCall call, MethodChannel.Result result) {
+    private void handleShareCall(MethodCall call, MethodChannel.Result result) {
         Share.Request request = new Share.Request();
         request.mState = call.argument("state");
         if ("shareImage".equals(call.method)) {
@@ -288,7 +288,7 @@ public final class DouyinKitPlugin implements FlutterPlugin, ActivityAware, Meth
         return anchor;
     }
 
-    private void handleShareToContacts(MethodCall call, MethodChannel.Result result) {
+    private void handleShareToContactsCall(MethodCall call, MethodChannel.Result result) {
         ShareToContact.Request request = new ShareToContact.Request();
         request.mState = call.argument("state");
         if ("shareImageToContacts".equals(call.method)) {
@@ -314,7 +314,7 @@ public final class DouyinKitPlugin implements FlutterPlugin, ActivityAware, Meth
         return html;
     }
 
-    private void handleOpenRecordPage(MethodCall call, MethodChannel.Result result) {
+    private void handleOpenRecordCall(MethodCall call, MethodChannel.Result result) {
         OpenRecord.Request request = new OpenRecord.Request();
         request.mState = call.argument("state");
         DouYinOpenApi openApi = createOpenApi();
