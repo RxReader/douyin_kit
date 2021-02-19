@@ -1,5 +1,10 @@
 import 'dart:async';
+import 'dart:convert' as convert;
+import 'dart:io';
 
+import 'package:douyin_kit/src/model/api/douyin_access_token_resp.dart';
+import 'package:douyin_kit/src/model/api/douyin_entity.dart';
+import 'package:douyin_kit/src/model/api/douyin_user_info_resp.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -17,13 +22,13 @@ class Douyin {
 
   /// 向抖音注册应用
   Future<void> registerApp({
-    @required String appId,
+    @required String clientKey,
   }) {
-    assert(appId?.isNotEmpty ?? false);
+    assert(clientKey?.isNotEmpty ?? false);
     return _channel.invokeMethod<void>(
       'registerApp',
       <String, dynamic>{
-        'appId': appId,
+        'client_key': clientKey,
       },
     );
   }
@@ -51,6 +56,73 @@ class Douyin {
         if (state != null) 'state': state,
       },
     );
+  }
+
+  /// https://open.douyin.com/platform/doc/6848806493387606024
+  Future<DouyinEntity<DouyinAccessTokenResp>> getAccessToken({
+    @required String clientKey,
+    @required String clientSecret,
+    @required String code,
+    String grantType = 'authorization_code',
+  }) {
+    assert(clientKey?.isNotEmpty ?? false);
+    assert(clientSecret?.isNotEmpty ?? false);
+    assert(code?.isNotEmpty ?? false);
+    assert(grantType?.isNotEmpty ?? false);
+    return HttpClient()
+        .getUrl(Uri.parse('https://open.douyin.com/oauth/access_token?client_key=$clientKey&client_secret=$clientSecret&code=$code&grant_type=$grantType'))
+        .then((HttpClientRequest request) {
+      return request.close();
+    }).then<DouyinEntity<DouyinAccessTokenResp>>((HttpClientResponse response) async {
+      if (response.statusCode == HttpStatus.ok) {
+        String content = await convert.utf8.decodeStream(response);
+        return DouyinEntity<DouyinAccessTokenResp>.fromJson(
+          convert.json.decode(content) as Map<String, dynamic>,
+          (Object json) => json != null ? DouyinAccessTokenResp.fromJson(json as Map<String, dynamic>) : null,
+        );
+      }
+      throw HttpException('HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
+    });
+  }
+
+  /// https://open.douyin.com/platform/doc/6848806497707722765
+  Future<DouyinEntity<DouyinAccessTokenResp>> refreshAccessToken({
+    @required String clientKey,
+    @required String refreshToken,
+  }) {
+    assert(clientKey?.isNotEmpty ?? false);
+    assert(refreshToken?.isNotEmpty ?? false);
+    return HttpClient().getUrl(Uri.parse('https://open.douyin.com/oauth/refresh_token?client_key=$clientKey&grant_type=refresh_token&refresh_token=$refreshToken')).then((HttpClientRequest request) {
+      return request.close();
+    }).then<DouyinEntity<DouyinAccessTokenResp>>((HttpClientResponse response) async {
+      if (response.statusCode == HttpStatus.ok) {
+        String content = await convert.utf8.decodeStream(response);
+        return DouyinEntity<DouyinAccessTokenResp>.fromJson(
+          convert.json.decode(content) as Map<String, dynamic>,
+          (Object json) => json != null ? DouyinAccessTokenResp.fromJson(json as Map<String, dynamic>) : null,
+        );
+      }
+      throw HttpException('HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
+    });
+  }
+
+  /// https://open.douyin.com/platform/doc/6848806527751489550
+  Future<DouyinEntity<DouyinUserInfoResp>> getUserInfo({
+    @required String openId,
+    @required String accessToken,
+  }) {
+    return HttpClient().getUrl(Uri.parse('https://open.douyin.com/oauth/userinfo?open_id=$openId&access_token=$accessToken')).then((HttpClientRequest request) {
+      return request.close();
+    }).then<DouyinEntity<DouyinUserInfoResp>>((HttpClientResponse response) async {
+      if (response.statusCode == HttpStatus.ok) {
+        String content = await convert.utf8.decodeStream(response);
+        return DouyinEntity<DouyinUserInfoResp>.fromJson(
+          convert.json.decode(content) as Map<String, dynamic>,
+          (Object json) => json != null ? DouyinUserInfoResp.fromJson(json as Map<String, dynamic>) : null,
+        );
+      }
+      throw HttpException('HttpResponse statusCode: ${response.statusCode}, reasonPhrase: ${response.reasonPhrase}.');
+    });
   }
 
   ///

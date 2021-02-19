@@ -208,8 +208,8 @@ public final class DouyinKitPlugin implements FlutterPlugin, ActivityAware, Meth
     }
 
     private void registerApp(MethodCall call, MethodChannel.Result result) {
-        final String appId = call.argument("app_id");
-        DouYinOpenApiFactory.init(new DouYinOpenConfig(appId));
+        final String clientKey = call.argument("client_key");
+        DouYinOpenApiFactory.init(new DouYinOpenConfig(clientKey));
         result.success(null);
     }
 
