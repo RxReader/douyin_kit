@@ -1,4 +1,4 @@
 #import <Flutter/Flutter.h>
 
-@interface DouyinKitPlugin : NSObject<FlutterPlugin>
+@interface DouyinKitPlugin : NSObject <FlutterPlugin>
 @end

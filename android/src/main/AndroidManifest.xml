@@ -1,3 +1,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="io.github.v7lin.douyin_kit">
+    package="io.github.v7lin.douyin_kit">
+
+    <application>
+        <activity
+            android:name=".DouyinCallbackActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity="${applicationId}"
+            android:theme="@style/douyin_kit.Theme.Transparent" />
+
+        <activity-alias
+            android:name="${applicationId}.douyinapi.DouYinEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:targetActivity=".DouyinCallbackActivity"
+            android:taskAffinity="${applicationId}"
+            android:theme="@style/douyin_kit.Theme.Transparent" />
+
+        <provider
+            android:name=".DouyinFileProvider"
+            android:authorities="${applicationId}.DouyinFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/douyin_kit_file_paths" />
+        </provider>
+    </application>
 </manifest>

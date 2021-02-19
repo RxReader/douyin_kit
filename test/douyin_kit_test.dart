@@ -1,23 +1,18 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:douyin_kit/douyin_kit.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('douyin_kit');
+  const MethodChannel channel = MethodChannel('v7lin.github.io/douyin_kit');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
+    channel.setMockMethodCallHandler((MethodCall methodCall) async {});
   });
 
   tearDown(() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await DouyinKit.platformVersion, '42');
-  });
+  test('smoke test', () async {});
 }

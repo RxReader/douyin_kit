@@ -26,15 +26,32 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 29
 
+    resourcePrefix 'douyin_kit'
+
     defaultConfig {
         minSdkVersion 16
+
+        // library 混淆 -> 随 library 引用，自动添加到 apk 打包混淆
+        consumerProguardFiles 'consumer-rules.pro'
     }
+
     lintOptions {
         disable 'InvalidPackage'
+    }
+
+    flavorDimensions 'vendor'
+
+    productFlavors {
+        vendor {
+            dimension 'vendor'
+
+            // library 混淆 -> 随 library 引用，自动添加到 apk 打包混淆
+            consumerProguardFiles 'consumer-vendor-rules.pro'
+        }
     }
 }
 
 dependencies {
-    implementation 'com.bytedance.ies.ugc.aweme:opensdk-china-external:0.1.4.0'
-    implementation 'com.bytedance.ies.ugc.aweme:opensdk-common:0.1.4.0'
+    vendorImplementation 'com.bytedance.ies.ugc.aweme:opensdk-china-external:0.1.4.0'
+    vendorImplementation 'com.bytedance.ies.ugc.aweme:opensdk-common:0.1.4.0'
 }
